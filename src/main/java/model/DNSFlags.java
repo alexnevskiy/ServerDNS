@@ -7,7 +7,7 @@ public class DNSFlags {
     private boolean tc = false;     // 1 bit | 6
     private boolean rd = false;     // 1 bit | 7
     private boolean ra = false;     // 1 bit | 8
-    private byte z = 0;       // 3 bit | 9-11
+    private byte z = 0;             // 3 bit | 9-11
     private byte rCode = 0;         // 4 bit | 12-15
     private int flags = 0;
 

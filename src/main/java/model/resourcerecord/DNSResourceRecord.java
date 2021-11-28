@@ -1,10 +1,11 @@
 package model.resourcerecord;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
-import static model.Util.convertToBytes;
-import static model.Util.parseNameToBytes;
+import static model.Util.*;
+import static model.Util.convertToShort;
 
 public class DNSResourceRecord {
     private String rrName = "";
@@ -15,6 +16,14 @@ public class DNSResourceRecord {
     private String rData = "";
 
     public DNSResourceRecord() {}
+
+    public DNSResourceRecord(byte[] bytes) {
+        rrName = convertNameBytesToString(bytes);
+        rrType = convertToShort(Arrays.copyOfRange(bytes, rrName.length(), rrName.length() + 2));
+        rrClass = convertToShort(Arrays.copyOfRange(bytes, rrName.length() + 2, rrName.length() + 4));
+        rrTtl = convertToInt(Arrays.copyOfRange(bytes, rrName.length() + 4, rrName.length() + 8));
+        rdLength = convertToShort(Arrays.copyOfRange(bytes, rrName.length() + 8, rrName.length() + 10));
+    }
 
     public String getRrName() {
         return rrName;

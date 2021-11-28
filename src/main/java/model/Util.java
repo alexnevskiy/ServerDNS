@@ -10,8 +10,8 @@ import java.util.List;
 public class Util {
     public static String convertNameBytesToString(byte[] bytes) {
         StringBuilder stringBuilder = new StringBuilder();
-        if ((bytes[0] & 0xC0) == 0xC0) {
-            stringBuilder.append(Arrays.toString(bytes));
+        if ((bytes[0] & 0xFF) == 0xC0) {
+            stringBuilder.append(Arrays.toString(Arrays.copyOfRange(bytes, 0, 2)));
             return stringBuilder.toString();
         }
         int currentPosition = 0;
@@ -31,6 +31,11 @@ public class Util {
     public static short convertToShort(byte[] bytes) {
         ByteBuffer buffer = ByteBuffer.wrap(bytes);
         return buffer.getShort();
+    }
+
+    public static int convertToInt(byte[] bytes) {
+        ByteBuffer buffer = ByteBuffer.wrap(bytes);
+        return buffer.getInt();
     }
 
     public static List<Byte> convertToBytes(short number) {
