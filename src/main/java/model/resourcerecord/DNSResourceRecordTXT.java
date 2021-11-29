@@ -6,7 +6,7 @@ import java.util.Arrays;
 import java.util.List;
 
 public class DNSResourceRecordTXT extends DNSResourceRecord {
-    private short txtLength = 0;
+    private byte txtLength = 0;
 
     public DNSResourceRecordTXT() {
         super();
@@ -16,15 +16,20 @@ public class DNSResourceRecordTXT extends DNSResourceRecord {
         return txtLength;
     }
 
-    public void setTxtLength(short txtLength) {
+    public void setTxtLength(byte txtLength) {
         this.txtLength = txtLength;
+    }
+
+    @Override
+    public void setRData(String rData) {
+        super.setRData(new String(new byte[] {txtLength}) + rData);
     }
 
     public DNSResourceRecordTXT(byte[] bytes) {
         super(bytes);
         int rDataStart = getRrName().length() + 10;
         txtLength = bytes[rDataStart];
-        setRData(new String(Arrays.copyOfRange(bytes, rDataStart + 1, rDataStart + txtLength)));
+        super.setRData(new String(Arrays.copyOfRange(bytes, rDataStart, rDataStart + txtLength + 1)));
     }
 
     @Override

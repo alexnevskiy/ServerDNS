@@ -2,6 +2,7 @@ package model.resourcerecord;
 
 import org.apache.commons.lang3.ArrayUtils;
 
+import java.nio.ByteBuffer;
 import java.util.Arrays;
 import java.util.List;
 
@@ -22,11 +23,16 @@ public class DNSResourceRecordMX extends DNSResourceRecord {
         this.preference = preference;
     }
 
+    @Override
+    public void setRData(String rData) {
+        super.setRData(new String(ByteBuffer.allocate(Short.BYTES).putShort(preference).array()) + rData);
+    }
+
     public DNSResourceRecordMX(byte[] bytes) {
         super(bytes);
         int rDataStart = getRrName().length() + 10;
         preference = convertToShort(Arrays.copyOfRange(bytes, rDataStart, rDataStart + 2));
-        setRData(new String(Arrays.copyOfRange(bytes, rDataStart + 2, rDataStart + getRdLength() - 2)));
+        super.setRData(new String(Arrays.copyOfRange(bytes, rDataStart, rDataStart + getRdLength())));
     }
 
     @Override
