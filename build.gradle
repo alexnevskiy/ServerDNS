@@ -1,5 +1,6 @@
 plugins {
     id 'java'
+    id "com.github.johnrengelman.shadow" version "6.1.0"
 }
 
 group 'org.example'
@@ -9,7 +10,30 @@ repositories {
     mavenCentral()
 }
 
+configurations {
+    // configuration that holds jars to include in the jar
+    extraLibs
+}
+
 dependencies {
-    testImplementation group: 'junit', name: 'junit', version: '4.12'
-    implementation group: 'org.apache.commons', name: 'commons-lang3', version: '3.0'
+    // testImplementation group: 'junit', name: 'junit', version: '4.12'
+    extraLibs group: 'junit', name: 'junit', version: '4.12'
+    // implementation group: 'org.apache.commons', name: 'commons-lang3', version: '3.11'
+    extraLibs group: 'org.apache.commons', name: 'commons-lang3', version: '3.11'
+
+    task stage(dependsOn: ['build', 'clean'])
+    build.mustRunAfter clean
+
+    configurations.compile.extendsFrom(configurations.extraLibs)
+}
+
+jar {
+    manifest {
+        attributes 'Main-Class': 'Main'
+    }
+    from {
+        (configurations.compile.findAll { !it.path.endsWith(".pom") }).collect {
+            it.isDirectory() ? it : zipTree(it)
+        }
+    }
 }

@@ -33,6 +33,7 @@ public class Server extends Thread {
         socket = new DatagramSocket(53);    // default DNS port
     }
 
+    @Override
     public void run() {
         running = true;
         DNSMessage message;
